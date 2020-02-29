@@ -239,7 +239,7 @@ function Room({ roomId, teamName, goToRoom }) {
                     </Toolbar>
                 </AppBar>
 
-                <Chat messages={messages}/>
+                <Chat messages={messages} teamName={teamName}/>
 
                 <div className="LeftRight" style={{ paddingLeft: 16, paddingRight: 16 }}>
                     <TextField
@@ -386,19 +386,21 @@ function SeeChallenge({ open, setOpen, challenge, onChallengeComplete }) {
     );
 }
 
-function Chat({ messages }) {
+function Chat({ messages, teamName }) {
     return (
         <Paper className="Chat-Wrapper" elevation={5}>
             <ul className="Chat-Container">
-                {messages.map(ChatMessage)}
+                {messages.map(message => {
+                  const alignment = message.teamName === teamName ? "right" : "left";
+                  return ChatMessage(message, alignment)
+                })}
             </ul>
         </Paper>
     )
 }
 
-function ChatMessage(message) {
-    const { text, teamName, timeStamp } = message;
-    const alignment = teamName === "owner" ? "left" : "right";
+function ChatMessage(message, alignment) {
+    const { text, timeStamp } = message;
 
     return (
         <div className={`ChatMessage-Wrapper ${alignment}`}>
