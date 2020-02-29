@@ -22,7 +22,7 @@ import {
 } from '@material-ui/core';
 
 function App() {
-    const [page, setPage] = useState("home");
+    const [page, setPage] = useState("room");
     const [roomId, setRoomId] = useState("");
     const [teamName, setTeamName] = useState("");
 
@@ -233,7 +233,7 @@ function Room({ roomId, teamName, goToRoom }) {
                         </Typography>
 
                         {teamName === currTeam &&
-                        <Button color="inherit">
+                        <Button color="inherit" onClick={() => setSeeChallengeOpen(true)}>
                             See challenge
                         </Button>}
                     </Toolbar>
@@ -307,7 +307,7 @@ function CreateChallenge({ open, setOpen, setChallenge }) {
     const [challengeText, setChallengeText] = useState("");
 
     return (
-        <Dialog open={open} onClose={() => setOpen(false)}>
+        <Dialog open={open} onClose={() => alert("Please set a challenge.")}>
             <DialogTitle>
                 <Typography>Set challenge</Typography>
             </DialogTitle>
@@ -330,13 +330,6 @@ function CreateChallenge({ open, setOpen, setChallenge }) {
             </DialogContent>
 
             <DialogActions>
-                <Button
-                    color="primary"
-                    onClick={() => setOpen(false)}
-                >
-                    Cancel
-                </Button>
-
                 <Button
                     color="primary"
                     onClick={() => {
