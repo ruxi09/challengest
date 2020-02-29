@@ -210,6 +210,7 @@ function Room({ roomId, teamName, goToRoom }) {
                 open={createChallengeOpen}
                 setOpen={setCreateChallengeOpen}
                 setChallenge={setChallenge}
+                onChallengeSet={() => alert('hello')}
             />
 
             <SeeChallenge
@@ -302,7 +303,7 @@ function Room({ roomId, teamName, goToRoom }) {
 }
 
 
-function CreateChallenge({ open, setOpen, setChallenge }) {
+function CreateChallenge({ open, setOpen, setChallenge, onChallengeSet }) {
     const [error, setError] = useState(false);
     const [challengeText, setChallengeText] = useState("");
 
@@ -338,6 +339,7 @@ function CreateChallenge({ open, setOpen, setChallenge }) {
                         if (!error) {
                             setChallenge(challengeText);
                             setOpen(false);
+                            onChallengeSet();
                         }
                     }}>
                     Done
