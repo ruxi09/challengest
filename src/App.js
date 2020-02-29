@@ -22,7 +22,7 @@ import {
 } from '@material-ui/core';
 
 function App() {
-    const [page, setPage] = useState("room");
+    const [page, setPage] = useState("home");
     const [roomId, setRoomId] = useState("");
     const [teamName, setTeamName] = useState("");
 
