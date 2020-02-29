@@ -115,79 +115,14 @@ function LoadingButton({variant, color, loading, onClick, style, children}) {
 }
 
 function Room({roomId, teamId, goToRoom}) {
-  const [messages, setMessages] = useState([
-    {text: "alo pronto", teamId: "owner", timeStamp: "12:34"},
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {
-      text: "sunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactu  sunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactu",
-      teamId: "participant",
-      timeStamp: "45:67"
-    }, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"},
-  ]);
+  const [messages, setMessages] = useState([]);
+    axios({method: 'post', url: 'http://127.0.0.1:3001/getChat', headers: {}, data: {roomId}})
+        .then(function (response) {
+            setMessages(response.data.messages);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
   const [input, setInput] = useState("");
 
   document.title = `Room - ${roomId}`;
@@ -216,16 +151,33 @@ function Room({roomId, teamId, goToRoom}) {
           variant="outlined"
           onKeyPress={(event) => {
             if (event.key === 'Enter') {
-              alert(input);
-              setInput("")
+              axios({method: 'post', url: 'http://127.0.0.1:3001/sendMessage', headers: {}, data: {roomId, teamName, message: input}})
+                  .then(function (response) {
+                    setInput("");
+                    axios({method: 'post', url: 'http://127.0.0.1:3001/getChat', headers: {}, data: {roomId}})
+                        .then(function (response) {
+                          setMessages(response.data.messages);
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
             }
           }}
           style={{flex: 1}}/>
 
         <IconButton
           onClick={() => {
-            alert(input);
-            setInput("");
+            axios({method: 'post', url: 'http://127.0.0.1:3001/sendMessage', headers: {}, data: {roomId, teamName, message: input}})
+                .then(function (response) {
+                  setInput("");
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
           }}
           style={{marginLeft: 8}}>
           <SendIcon/>
