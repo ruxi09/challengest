@@ -33,16 +33,71 @@
   color: #111;
 }
 
-.Room-Container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
 .LoadingButton-Container {
   position: relative;
   align-items: center;
 }
+
+.Room-Container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.Chat-Wrapper {
+  margin: 16px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.Chat-Container {
+  padding: 16px;
+  margin: 0;
+  flex-direction: column;
+}
+
+.ChatMessage-Wrapper.left {
+  text-align: left;
+}
+
+.ChatMessage-Wrapper.right {
+  text-align: right;
+}
+
+.ChatMessage-Container {
+  align-content: space-between;
+  max-width: 80vw;
+  padding: 4px 8px 8px;
+  margin-bottom: 12px;
+  display: inline-flex;
+  flex-direction: row;
+}
+
+.Timestamp {
+  margin-left: 16px;
+  margin-bottom: -4px;
+  align-self: flex-end;
+  font-size: 10px;
+}
+
+::-webkit-scrollbar-track
+{
+  background-color: transparent;
+}
+
+::-webkit-scrollbar
+{
+  width: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: #BDBDBD;
+  border: 2px solid #BDBDBD
+}
+
+
 
 @keyframes App-logo-spin {
   from {
