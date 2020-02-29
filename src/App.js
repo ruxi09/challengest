@@ -1,35 +1,48 @@
 import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {AppBar, Toolbar, Button, Card, CircularProgress, TextField, Typography, IconButton} from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SendIcon from '@material-ui/icons/Send';
-import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
-
-const teamName = 'digestives';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Card,
+  CircularProgress,
+  TextField,
+  Typography,
+  IconButton,
+  Paper,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  DialogContentText
+} from '@material-ui/core';
 
 function App() {
-  const [page, setPage] = useState("room");
+  const [page, setPage] = useState("home");
   const [roomId, setRoomId] = useState("");
-  const [teamId, setTeamId] = useState("");
+  const [teamName, setTeamName] = useState("");
 
   return (
     <div className="App">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
       {page === "home" ?
-        <Home goToRoom={(roomId, teamId) => {
+        <Home goToRoom={(roomId, teamName) => {
           setRoomId(roomId);
-          setTeamId(teamId);
+          setTeamName(teamName);
           setPage("room");
         }}/> :
-        <Room roomId={roomId} teamId={teamId} goToRoom={() => setPage("home")}/>}
+        <Room roomId={roomId} teamName={teamName} goToRoom={() => setPage("home")}/>}
     </div>
   );
 }
 
 function Home({goToRoom}) {
   const [roomId, setRoomId] = useState("");
+  const [teamName, setTeamName] = useState("");
   const [createLoading, setCreateLoading] = useState(false);
   const [joinLoading, setJoinLoading] = useState(false);
   const [joinRoomError, setJoinRoomError] = useState(false);
@@ -38,7 +51,9 @@ function Home({goToRoom}) {
   document.title = "Challengest";
 
   return (
-    <div className="App">
+    <div>
+      <SetTeamDialog setTeam={setTeamName}/>
+
       <header className="Home-Container">
         <Typography variant="h1" className="Title">Challengest</Typography>
 
@@ -51,15 +66,15 @@ function Home({goToRoom}) {
           onClick={async () => {
             setCreateLoading(true);
             axios({method: 'post', url: 'http://127.0.0.1:3001/createRoom', headers: {}, data: {teamId: teamName}})
-    .then(function (response) {
-      setCreateLoading(false);
-      goToRoom(response.data.roomId, teamName);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+              .then(function (response) {
+                setCreateLoading(false);
+                goToRoom(response.data.roomId, teamName);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
           }}
-          style={{marginBottom: 16, background: 'red'}}>
+          style={{marginBottom: 16}}>
           Create room
         </LoadingButton>
 
@@ -81,7 +96,7 @@ function Home({goToRoom}) {
                 }, 3000)
               }
             }}
-            style={{marginRight: 8, background: 'red', marginTop: 8}}>
+            style={{marginRight: 8, marginTop: 8}}>
             Join room
           </LoadingButton>
 
@@ -101,6 +116,51 @@ function Home({goToRoom}) {
   );
 }
 
+function SetTeamDialog({setTeam}) {
+  const [open, setOpen] = useState(true);
+  const [error, setError] = useState(false);
+  const [teamName, setTeamName] = useState("");
+
+  return (
+    <Dialog open={open} onClose={() => alert("You have to set a name for your team.")}>
+      <DialogTitle>
+        <Typography>Team name</Typography>
+      </DialogTitle>
+
+      <DialogContent>
+        <DialogContentText>
+          <Typography>Set a name for your team. </Typography>
+        </DialogContentText>
+        <TextField
+          autoFocus
+          label="Team name"
+          fullWidth
+          margin="dense"
+          value={teamName}
+          onChange={(event) => setTeamName(event.target.value)}
+          error={error}
+          helperText={error ? "Please input a name for your team." : ""}
+        />
+      </DialogContent>
+
+      <DialogActions>
+        <Button
+          onClick={() => {
+            const error = teamName === "";
+            setError(error);
+            if (!error) {
+              setTeam(teamName);
+              setOpen(false);
+            }
+          }}
+        >
+          Done
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
 function LoadingButton({variant, color, loading, onClick, style, children}) {
   return (
     <div className="LoadingButton-Container">
@@ -117,121 +177,162 @@ function LoadingButton({variant, color, loading, onClick, style, children}) {
 function Room({roomId, teamId, goToRoom}) {
   const [messages, setMessages] = useState([
     {text: "alo pronto", teamId: "owner", timeStamp: "12:34"},
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"}, {
-      text: "alo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo prontoalo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {
-      text: "sunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactu  sunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactusunt contactu",
-      teamId: "participant",
-      timeStamp: "45:67"
-    }, {
-      text: "alo pronto",
-      teamId: "owner",
-      timeStamp: "12:34"
-    },
-    {text: "sunt contactu", teamId: "participant", timeStamp: "45:67"},
+    {text: "sunt contacu", teamId: "participant", timeStamp: "09:37"},
   ]);
   const [input, setInput] = useState("");
+  const [challenge, setChallenge] = useState("");
+  const [currTeam, setCurrTeam] = useState("participant");
+  const [createChallengeOpen, setCreateChallengeOpen] = useState(teamId !== currTeam);
+  const [seeChallengeOpen, setSeeChallengeOpen] = useState(teamId === currTeam);
 
   document.title = `Room - ${roomId}`;
 
   return (
-    <div className="Room-Container">
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" onClick={() => goToRoom()} style={{marginRight: 16, color: "white"}}>
-            <ArrowBackIcon/>
-          </IconButton>
+    <div>
+      <CreateChallenge
+        open={createChallengeOpen}
+        setOpen={setCreateChallengeOpen}
+        setChallenge={setChallenge}
+      />
 
-          <Typography variant="h5">
-            Room {roomId} - Team {teamId}
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <SeeChallenge
+        open={seeChallengeOpen}
+        setOpen={setSeeChallengeOpen}
+        challenge={challenge}
+        onChallengeComplete={() => {
+          setCurrTeam(currTeam === "owner" ? "participant" : "owner");
+        }}
+      />
 
-      <Chat messages={messages}/>
+      <div className="Room-Container">
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton edge="start" onClick={() => goToRoom()} style={{marginRight: 16, color: "white"}}>
+              <ArrowBackIcon/>
+            </IconButton>
 
-      <div className="LeftRight" style={{paddingLeft: 16, paddingRight: 16}}>
-        <TextField
-          label="Message"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          variant="outlined"
-          onKeyPress={(event) => {
-            if (event.key === 'Enter') {
+            <Typography variant="h5" style={{flexGrow: 1}}>
+              Room {roomId} - Team {teamId}
+            </Typography>
+
+            {teamId === currTeam &&
+            <Button color="inherit">
+              See challenge
+            </Button>}
+          </Toolbar>
+        </AppBar>
+
+        <Chat messages={messages}/>
+
+        <div className="LeftRight" style={{paddingLeft: 16, paddingRight: 16}}>
+          <TextField
+            label="Message"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            variant="outlined"
+            onKeyPress={(event) => {
+              if (event.key === 'Enter') {
+                alert(input);
+                setInput("")
+              }
+            }}
+            style={{flex: 1}}/>
+
+          <IconButton
+            onClick={() => {
               alert(input);
-              setInput("")
-            }
-          }}
-          style={{flex: 1}}/>
-
-        <IconButton
-          onClick={() => {
-            alert(input);
-            setInput("");
-          }}
-          style={{marginLeft: 8}}>
-          <SendIcon/>
-        </IconButton>
+              setInput("");
+            }}
+            style={{marginLeft: 8}}>
+            <SendIcon/>
+          </IconButton>
+        </div>
       </div>
     </div>
+  );
+}
+
+function CreateChallenge({open, setOpen, setChallenge}) {
+  const [error, setError] = useState(false);
+  const [challengeText, setChallengeText] = useState("");
+
+  return (
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <DialogTitle>
+        <Typography>Set challenge</Typography>
+      </DialogTitle>
+
+      <DialogContent>
+        <DialogContentText>
+          <Typography>Please set a challenge for the other team.</Typography>
+        </DialogContentText>
+
+        <TextField
+          autoFocus
+          label="Challenge"
+          fullWidth
+          margin="dense"
+          value={challengeText}
+          onChange={(event) => setChallengeText(event.target.value)}
+          error={error}
+          helperText={error ? "Please input a challenge." : ""}
+        />
+      </DialogContent>
+
+      <DialogActions>
+        <Button
+          color="primary"
+          onClick={() => setOpen(false)}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          color="primary"
+          onClick={() => {
+            const error = challengeText === "";
+            setError(error);
+            if (!error) {
+              setChallenge(challengeText);
+              setOpen(false);
+            }
+          }}>
+          Done
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+function SeeChallenge({open, setOpen, challenge, onChallengeComplete}) {
+  return (
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <DialogTitle>Your current challenge</DialogTitle>
+
+      <DialogContent>
+        <Typography>{challenge}</Typography>
+      </DialogContent>
+
+      <DialogActions>
+        <Button
+          color="primary"
+          onClick={() => setOpen(false)}
+        >
+          Exit
+        </Button>
+
+        <Button
+          color="primary"
+          onClick={() => {
+            alert('ey na');
+            setOpen(false);
+            onChallengeComplete();
+          }}
+        >
+          Challenge done
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
