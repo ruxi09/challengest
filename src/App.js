@@ -53,7 +53,7 @@ function Home({goToRoom}) {
               goToRoom("new", "owner");
             }, 3000);
           }}
-          style={{marginBottom: 16}}>
+          style={{marginBottom: 16, background: 'red'}}>
           Create room
         </LoadingButton>
 
@@ -75,7 +75,7 @@ function Home({goToRoom}) {
                 }, 3000)
               }
             }}
-            style={{marginTop: 8}}>
+            style={{marginRight: 8, background: 'red', marginTop: 8}}>
             Join room
           </LoadingButton>
 
