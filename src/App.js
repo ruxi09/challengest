@@ -5,6 +5,9 @@ import {AppBar, Toolbar, Button, Card, CircularProgress, TextField, Typography, 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SendIcon from '@material-ui/icons/Send';
 import Paper from "@material-ui/core/Paper";
+import axios from 'axios';
+
+const teamName = 'digestives';
 
 function App() {
   const [page, setPage] = useState("room");
@@ -45,13 +48,16 @@ function Home({goToRoom}) {
           variant="contained"
           color="primary"
           loading={createLoading}
-          onClick={() => {
+          onClick={async () => {
             setCreateLoading(true);
-
-            timer.current = setTimeout(() => {
-              setCreateLoading(false);
-              goToRoom("new", "owner");
-            }, 3000);
+            axios({method: 'post', url: 'http://127.0.0.1:3001/createRoom', headers: {}, data: {teamId: teamName}})
+    .then(function (response) {
+      setCreateLoading(false);
+      goToRoom(response.data.roomId, teamName);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
           }}
           style={{marginBottom: 16}}>
           Create room
